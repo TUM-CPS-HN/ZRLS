@@ -1,8 +1,6 @@
 ## Online Data-Driven Reachability Analysis using Zonotopic Recursive Least Squares
 <br/> 
 This repo contains the code for the following paper :
-
-<br/><br/>
 1- Naderi Akhormeh, Alireza and Hegazy, Amr and Alanwar, Amr. "Online Data-Driven Reachability Analysis using Zonotopic Recursive Least Squares".
 
 ## A Short video about the idea
@@ -20,8 +18,6 @@ alt="Subject Pronouns"
 width=500
 />
 </p>
-<br />
-<br />
 
 ## Files Description 
 This reposetory contaies the simulation have done in the paper.<br />
