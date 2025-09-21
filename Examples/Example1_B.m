@@ -68,8 +68,9 @@ end
 
 %simulate the system to get the data
 %Model uncertainty
-deltaA = -ones(5,5)*0.0005;
-deltaB = ones(5,1)*0.0005;
+deltaA = -ones(5,5)*0.0001;
+deltaB = ones(5,1)*0.0003;
+sigma_AB =  max(max(abs([deltaA,deltaB])));
 x0 = X0.center;
 x(:,1) = x0;
 index=1;
@@ -181,7 +182,7 @@ totalsteps = 3;
 P = eye(n) * 1e7;
 Q_v = (sigma_v)^2; % Scalar variance for single measurement noise
 q_v = [sqrt(Q_v);sqrt(Q_v);sqrt(Q_v);sqrt(Q_v);sqrt(Q_v)];
-lamda = 0.9;
+lamda = 0.92;
 
 for i = 1:totalsamples
     phi = [X_0T(:,i);U_full(i)]';
@@ -210,17 +211,30 @@ Zeps_ZRLS = zonotope([zeros(dim_x,1),diag(eps)]);
 
 %% compute next step sets from model / data
 
+Ecell = {};
+for i = 1:n
+    for j = 1:m
+        E = zeros(n, m);
+        E(i,j) = 1;
+        Ecell{end+1} = E;
+    end
+end
+
+
+
+
 % set number of steps in analysis
 X_model = cell(totalsteps+1,1);
 X_data = cell(totalsteps+1,1);
 
 % init sets for loop
 X_model{1} = X0; X_data{1} = X0;X_data_zrls{1} = X0;
-
 for i=1:totalsteps
 
     % 1) model-based computation
     X_model{i,1}=reduce(X_model{i,1},'girard',400);
+    sys_d.A = sys_d.A + deltaA;
+    sys_d.B = sys_d.B + deltaB;
     X_model{i+1,1} = sys_d.A * X_model{i} + sys_d.B * U+W;
 
     % 2) Data Driven approach LS
@@ -228,8 +242,24 @@ for i=1:totalsteps
     X_data{i+1,1} = AB * (cartProd(X_data{i},U)) +Zeps_LS+W;
 
     % 3)  Data Driven approach ZRLS
+    l= 1;
+
+    for i1 = 1:n
+        for j = 1:m
+            G_Mh{l} = i*sigma_AB*Ecell{l}';
+            l = l+1;
+        end
+    end
+
+
+    for j = 1: length(AB_ZRLS.generator)
+
+        G_M_tilda{j} = AB_ZRLS.generator(:,:,j);
+
+    end
+    M_hat = matZonotope(AB_ZRLS.center,[G_M_tilda,G_Mh]);
     X_data_zrls{i,1}=reduce(X_data_zrls{i,1},'girard',400);
-    X_data_zrls{i+1,1} = AB_ZRLS * (cartProd(X_data_zrls{i},U))+Zeps_ZRLS  +W;
+    X_data_zrls{i+1,1} = M_hat * (cartProd(X_data_zrls{i},U))+Zeps_ZRLS  +W;
 
 
 end

@@ -85,10 +85,10 @@ end
 
 
 I_int = intervalMatrix(M);
-I_max = abs(I_int);
-
-for i = 1:length(I_max(:,1))
-    L(i) = norm(I_max(i,:),"fro");
+I_int_c = 0.5*(infimum(I_int)+supremum(I_int));
+Delta = 0.5*(supremum(I_int)-infimum(I_int));
+for i = 1:length(I_int_c(:,1))
+    L(i) = norm(abs(I_int_c)+Delta,"fro");
 end
 
 
