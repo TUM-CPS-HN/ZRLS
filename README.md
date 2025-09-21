@@ -5,7 +5,7 @@ This repo contains the code for the following paper :<br/>
 
 ## A Short video about the idea
  
-<iframe width="560" height="315" src="https://www.youtube.com/embed/6va1PpCKL9A" frameborder="0" allowfullscreen></iframe>
+[![Watch the video](https://img.youtube.com/vi/6va1PpCKL9A/0.jpg)](https://www.youtube.com/watch?v=6va1PpCKL9A)
 
 ## Problem Statement
 We present a data-driven reachability analysis framework that computes over-approximations of reachable sets directly from online state measurements. The method estimates time-varying unknown models using an Exponentially Forgetting Zonotopic Recursive Least Squares (EF-ZRLS) method, which processes data corrupted by bounded noise. Specifically, a time-varying set of models that contains the true model of the system is estimated recursively, and then used to compute the forward reachable sets under process noise and uncertain inputs.<br />
